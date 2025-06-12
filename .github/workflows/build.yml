@@ -17,13 +17,22 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-          cache: "gradle"
           
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          cache: true
+
+      - name: Cache some things
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            android/.gradle
+            ${{ runner.tool_cache }}/flutter
+          key: ${{ runner.os }}-build-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
 
       - name: Get dependencies
         run: flutter pub get

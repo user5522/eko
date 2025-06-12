@@ -16,24 +16,24 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: "17"
-          distribution: "zulu"
+          distribution: "temurin"
           cache: "gradle"
-
-      - uses: subosito/flutter-action@v2
+          
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
 
-      - name: Set up Flutter
+      - name: Get dependencies
         run: flutter pub get
 
       - name: Build APKs
         run: flutter build apk --release --split-per-abi
 
-      - uses: ilharp/sign-android-release@v1
-        name: Sign app APK
+      - name: Sign app APK
+        uses: ilharp/sign-android-release@v2
         with:
-          buildToolsVersion: 35.0.0
           releaseDir: build/app/outputs/flutter-apk/
           signingKey: ${{ secrets.SIGNING_KEYSTORE }}
           keyAlias: ${{ secrets.SIGNING_KEY_ALIAS }}
